@@ -58,8 +58,8 @@ export default (props: IPreviewerProps) => {
                         iframe: null,
                         // omit children
                         children: null,
-                        // show source code
-                        defaultShowCode: true,
+                        // not show source code
+                        defaultShowCode: false,
                         // hide external action
                         hideActions: ['EXTERNAL' as IPreviewerProps['hideActions'][0]].concat(
                             props.hideActions,
