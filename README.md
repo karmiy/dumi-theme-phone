@@ -16,21 +16,94 @@ dumie-theme-mobile 现状（v1.1.8）：
 
 ### 指定全量 demo 视图
 
-由于一个 demo 对应一个链接，需要独立一个出 demo 用于展示在右侧的手机窗：
+由于一个 demo 对应一个链接
 
-- 包含全部 demo 示例的代码
+我们需要独立一个出全量 demo （包含了全部示例代码）用于展示在右侧的手机窗
 
-使用 FrontMatter 语法对此 demo 进行配置标记
+如下结构中的 demos/index.tsx
 
 ```
+-src
+  -button
+    - demos
+      - demo-type.tsx
+      - demo-basic.tsx
+      - index.tsx
+    - README.md
+```
+
+```tsx
+// demos/demo-basic.tsx
+import React from 'react';
+import { Button } from 'xxx';
+
+export default () => <Button>Basic</Button>;
+```
+
+```tsx
+// demos/demo-type.tsx
+import React from 'react';
+import { Button } from 'xxx';
+
+export default () => <Button type='regular'>Regular</Button>;
+```
+
+
+```tsx
+// demos/index.tsx
+import React from 'react';
+import DemoBasic from './demo-basic';
+import DemoType from './demo-type';
+
+// 集合全部 demos
+export default () => {
+  return (
+    <div>
+      <DemoBasic />
+      <DemoType />
+    </div>
+  );
+}
+```
+
+使用 FrontMatter 语法标志 code 对此 demo 进行配置标记
+
+```md
+# Button
+
+常用的操作按钮
+
+<code src='./demos' phone />
+
+## 基本使用
+
+常规用法...
+
+<code src='./demos/demo-basic.tsx' />
+
+## 按钮类型
+
+Button 具有 x 种类型...
+
+<code src='./demos/demo-type.tsx' />
+```
+
+也可以 FrontMatter 注释
+
+```tsx
 /**
- * title: 基本用法
  * phone: true
  */
 import React from 'react';
 import { Button } from 'xxx';
 
-export default () => <Button>按钮</Button>;
+export default () => {
+  return (
+    <div>
+      ...
+    </div>
+  )
+}
 ```
 
 ### 状态栏厂商

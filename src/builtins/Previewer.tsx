@@ -7,6 +7,31 @@ import './Previewer.less';
 
 export const VIEWPORT_MSG_TYPE = 'dumi:viewport-demo';
 
+export function removeFaster(list: Array<any>, item: any) {
+    const index = list.indexOf(item);
+    if (index >= 0) {
+        // 10x faster than splice
+        list[index] = list[list.length - 1];
+        list.pop();
+    }
+}
+
+export interface ScrollListener {
+    (e: Event): void;
+}
+
+export const SCROLL_LISTENERS: Array<ScrollListener> = [];
+
+export const createScrollListener = (listener: ScrollListener) => {
+    SCROLL_LISTENERS.push(listener);
+
+    return () => removeFaster(SCROLL_LISTENERS, listener);
+};
+
+const onScroll = debounce(e => SCROLL_LISTENERS.forEach(listener => listener(e)), 50);
+
+window.addEventListener('scroll', onScroll);
+
 export default (props: IPreviewerProps) => {
     const ref = useRef<HTMLDivElement>();
     const { meta } = useContext(context);
@@ -23,10 +48,18 @@ export default (props: IPreviewerProps) => {
         /* istanbul ignore next */
         if (!meta.title) return;
 
-        const isFirstDemo =
-            document.querySelector('.__dumi-default-phone-previewer') === ref.current;
-        const handler = debounce(() => {
-            const scrollTop = document.documentElement.scrollTop + 128;
+        const previewers = document.querySelectorAll('.__dumi-default-phone-previewer');
+
+        if (!isValidWide) return;
+
+        const handler = () => {
+            console.log('...');
+            ([...previewers] as Array<HTMLDivElement>).findIndex(item => {
+                const scrollTop = document.documentElement.scrollTop + 128;
+                scrollTop < ref?.current?.offsetTop;
+            });
+            /* const scrollTop = document.documentElement.scrollTop + 128;
+            console.log(document.documentElement.scrollTop, ref?.current, ref?.current?.offsetTop);
 
             // post message if scroll into current demo
             const isFallbackFirstDemo = isFirstDemo && scrollTop < ref?.current?.offsetTop;
@@ -34,16 +67,13 @@ export default (props: IPreviewerProps) => {
                 scrollTop > ref?.current?.offsetTop &&
                 scrollTop < ref?.current?.offsetTop + ref?.current?.offsetHeight;
 
-            setIsActive(isFallbackFirstDemo || isDetectScrollPosition);
-        }, 50);
+            setIsActive(isFallbackFirstDemo || isDetectScrollPosition); */
+        };
+        // active source code wrapper if scroll into demo
+        const unsubscribe = createScrollListener(handler);
+        handler();
 
-        if (isValidWide) {
-            // active source code wrapper if scroll into demo
-            handler();
-            window.addEventListener('scroll', handler);
-        }
-
-        return () => window.removeEventListener('scroll', handler);
+        return () => unsubscribe();
     }, [props, meta, isValidWide]);
 
     /* -------------------- BLOCK: preview props -------------------- */
