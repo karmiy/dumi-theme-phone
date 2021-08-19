@@ -48,26 +48,27 @@ export default (props: IPreviewerProps) => {
         /* istanbul ignore next */
         if (!meta.title) return;
 
-        const previewers = document.querySelectorAll('.__dumi-default-phone-previewer');
+        const previewers = [
+            ...document.querySelectorAll('.__dumi-default-phone-previewer'),
+        ] as Array<HTMLDivElement>;
 
         if (!isValidWide) return;
 
         const handler = () => {
-            console.log('...');
-            ([...previewers] as Array<HTMLDivElement>).findIndex(item => {
-                const scrollTop = document.documentElement.scrollTop + 128;
-                scrollTop < ref?.current?.offsetTop;
+            const scrollTop = document.documentElement.scrollTop + 64;
+            const index = previewers.findIndex((item, index) => {
+                const prevItem = previewers[index - 1];
+                const nextItem = previewers[index + 1];
+                if (!prevItem) {
+                    return item.offsetTop + item.offsetHeight / 2 > scrollTop;
+                }
+                if (!nextItem) return true;
+                return (
+                    prevItem.offsetTop + prevItem.offsetHeight / 2 < scrollTop &&
+                    item.offsetTop + item.offsetHeight / 2 > scrollTop
+                );
             });
-            /* const scrollTop = document.documentElement.scrollTop + 128;
-            console.log(document.documentElement.scrollTop, ref?.current, ref?.current?.offsetTop);
-
-            // post message if scroll into current demo
-            const isFallbackFirstDemo = isFirstDemo && scrollTop < ref?.current?.offsetTop;
-            const isDetectScrollPosition =
-                scrollTop > ref?.current?.offsetTop &&
-                scrollTop < ref?.current?.offsetTop + ref?.current?.offsetHeight;
-
-            setIsActive(isFallbackFirstDemo || isDetectScrollPosition); */
+            setIsActive(previewers[index] === ref.current);
         };
         // active source code wrapper if scroll into demo
         const unsubscribe = createScrollListener(handler);
