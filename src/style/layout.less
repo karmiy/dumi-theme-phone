@@ -26,6 +26,10 @@
     > .markdown:first-child > *:first-child {
       margin-top: 0;
     }
+
+    > .markdown:not(:first-child):empty {
+      min-height: 0;
+    }
   }
 }
 
