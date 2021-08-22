@@ -24,9 +24,10 @@ const MobileDemoLayout: React.FC<IRouteComponentProps> = ({ children }) => {
 
     useEffect(() => {
         // Simulate the touch event of mobile terminal
-        if (target.current) {
+        /* if (target.current) {
             TouchEmulator(target.current);
-        }
+        } */
+        TouchEmulator(document.body);
     }, []);
 
     useEffect(() => {
