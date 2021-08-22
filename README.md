@@ -149,12 +149,4 @@ phone: false
 
 ## Log
 
-### 0.0.5
-
-- Chore
-    - .markdown:not(:first-child):empty 样式设置 min-height: 0
-
-### 0.0.4
-
-- Chore
-    - TouchEmulator 提取至 body 节点
+[查看更新日志](./LOG.md)
