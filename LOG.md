@@ -1,5 +1,9 @@
 # 更新日志
 
+### 0.0.6
+
+- 兼容 QRCode url 为 `null`
+
 ### 0.0.5
 
 - .__dumi-default-phone-content > article > .markdown:not(:first-child):empty 补充 min-height: 0

@@ -45,9 +45,11 @@ const Device: FC<IDeviceProps> = ({ url, className }) => {
                     role='refresh'
                     onClick={() => setRenderKey(Math.random())}
                 />
-                <button className='__dumi-default-icon' role='qrcode'>
-                    <QRCode value={url} size={96} />
-                </button>
+                {url ? (
+                    <button className='__dumi-default-icon' role='qrcode'>
+                        <QRCode value={url} size={96} />
+                    </button>
+                ) : null}
                 <a
                     href={url}
                     target='_blank'
